@@ -102,3 +102,54 @@ func TestUserInput_Validate(t *testing.T) {
 		})
 	}
 }
+
+func TestUser_FullName(t *testing.T) {
+	tests := []struct {
+		name			string
+		user			*entities.User
+		expected	string
+	}{
+		{
+			name:	"both first and last name",
+			user:	&entities.User{
+				FirstName:	stringPtr("John"),
+				LastName:		stringPtr("Doe"),
+			},
+			expected: "John Doe",
+		},
+		{
+			name:	"only first name",
+			user: &entities.User{
+				FirstName:	stringPtr("John"),
+			},
+			expected: "John",
+		},
+		{
+			name:	"only last name",
+			user:	&entities.User{
+				LastName: stringPtr("Doe"),
+			},
+			expected: "Doe",
+		},
+		{
+			name: "no names",
+			user:	&entities.User{},
+			expected: "",
+		},
+		{
+			name:	"empty names",
+			user: &entities.User{
+				FirstName:	stringPtr(""),
+				LastName:		stringPtr(""),
+			},
+			expected:	"",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := tt.user.FullName()
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
